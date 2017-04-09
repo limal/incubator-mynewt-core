@@ -58,6 +58,10 @@ syscfg.defs:
         restrictions:
             - "!SPI_0_MASTER"
 
+    I2C_0:
+        description: 'NRF52 I2C (TWI) interface 0'
+        value:  '1'
+
     TIMER_0:
         description: 'NRF52 Timer 0'
         value:  1

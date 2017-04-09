@@ -30,6 +30,7 @@
 #include "hal/hal_flash.h"
 #include "hal/hal_spi.h"
 #include "hal/hal_watchdog.h"
+#include "hal/hal_i2c.h"
 #if MYNEWT_VAL(UART_0)
 #include "uart/uart.h"
 #include "uart_hal/uart_hal.h"
@@ -43,6 +44,14 @@ static const struct nrf52_uart_cfg os_bsp_uart0_cfg = {
     .suc_pin_rx = MYNEWT_VAL(UART_0_PIN_RX),
     .suc_pin_rts = MYNEWT_VAL(UART_0_PIN_RTS),
     .suc_pin_cts = MYNEWT_VAL(UART_0_PIN_CTS),
+};
+#endif
+
+#if MYNEWT_VAL(I2C_0)
+static const struct nrf52_hal_i2c_cfg hal_i2c_cfg = {
+    .scl_pin = 2,
+    .sda_pin = 28,
+    .i2c_frequency = 100    /* 100 kHz */
 };
 #endif
 
@@ -165,6 +174,11 @@ hal_bsp_init(void)
 #if MYNEWT_VAL(UART_0)
     rc = os_dev_create((struct os_dev *) &os_bsp_uart0, "uart0",
       OS_DEV_INIT_PRIMARY, 0, uart_hal_init, (void *)&os_bsp_uart0_cfg);
+    assert(rc == 0);
+#endif
+
+#if MYNEWT_VAL(I2C_0)
+    rc = hal_i2c_init(0, (void *)&hal_i2c_cfg);
     assert(rc == 0);
 #endif
 
